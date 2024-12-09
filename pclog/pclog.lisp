@@ -1222,11 +1222,21 @@
                           ,@(mapcar (lambda (lv)
                                       `(deref ,lv))
                                     (variables-in (args goal)))
-                          (de-consify (make-predicate* ',(predicate goal)
-                                                       ',(relation-arity goal))
-                                      ,trail
-                                      ,@(args goal)
-                                      de-cont)))
+                          ,(case (length (args goal))
+                             (1 `(de-consify (make-predicate* ',(predicate goal)
+                                                              ',(relation-arity goal))
+                                             ,trail
+                                             ,(elt (args goal) 0)
+                                             de-cont))
+                             (2 `(de-consify (make-predicate* ',(predicate goal)
+                                                              ',(relation-arity goal))
+                                             ,trail
+                                             ,(let ((vars (elt (args goal) 0)))
+                                                (if (consp vars)
+                                                    (cons 'list vars)
+                                                    vars))
+                                             ,(elt (args goal) 1)
+                                             de-cont)))))
                       (otherwise
                        `(de-consify (make-predicate* ',(predicate goal)
                                                      ',(relation-arity goal))

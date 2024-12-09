@@ -861,7 +861,6 @@ which is accessed from lisp functor.
     ,(eval (escape-?.var `(and ,@body)))
     (lisp (return-from prolog T))))
 
-
 #||
 
 (defrel reverse
